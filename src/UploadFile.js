@@ -10,7 +10,7 @@ function upload(event){
 
 return (
     <div>
-        <input type="file" onChange={upload} accept=".pdf,.docx,image/*"/>
+        <input type="file" onChange={upload} accept="image/*"/>
         <img src={imageFile} />
     </div>
 )

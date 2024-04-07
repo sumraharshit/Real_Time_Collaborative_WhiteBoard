@@ -1,43 +1,40 @@
 import React, { useRef, useEffect, useState } from "react";
-// import Button from "./Button";
 import UploadFile from './UploadFile';
+import './style.css';
 
 function Canvas() {
     const [drawing, setDrawing] = useState(false);
-    const [uploadedImage, setUploadedImage] = useState(null);
-
     const canvasRef = useRef(null);
+
 
         useEffect(() => {
         const canvas = canvasRef.current;
         const context = canvas.getContext('2d');
 
-      const handleDraw = (event)=>{
-        let isHandle = true;
+    //    function drawingImage()
+    //     {if (uploadedImage) {
+    //         const image = new Image();
+    //         image.onload = () => {
+    //           context.drawImage(image, 0, 0);
+    //         };
+    //         image.src = uploadedImage;
+    //       }}
 
-        canvas.addEventListener('mouseup', ()=>{
-            isHandle = false;
-        })
-           if(drawing && isHandle)
+      function handleDraw(event){
+           if(drawing)
             { const rect = canvas.getBoundingClientRect();
             const x = event.clientX - rect.left;
             const y = event.clientY - rect.top;
 
             context.beginPath();
-            context.arc(x, y, 5, 0, 2 * Math.PI);
-            context.arc(x + 1, y + 1, 5, 0, 2 * Math.PI);
-            context.fillStyle = 'black';
+            context.arc(x,y,4,-1,2*Math.PI);
+            // context.moveTo(x,y);
+            // context.lineTo(event.screenX,event.screenY);
+            context.fillStyle = 'black'; 
+            context.stroke();  
             context.fill();
         
-
-            if (uploadedImage) {
-                const image = new Image();
-                image.onload = () => {
-                  context.clearRect(0, 0, canvas.width, canvas.height); // Optional: Clear canvas before drawing image
-                  context.drawImage(image, 0, 0);
-                };
-                image.src = uploadedImage;
-              }
+            
         }
         }
 
@@ -54,6 +51,8 @@ function Canvas() {
        canvas.addEventListener('mouseup', handleNotDraw);
        canvas.addEventListener('mouseleave', handleNotDraw);
 
+    //    drawingImage();
+
         return () => {
             canvas.removeEventListener('mousedown', ()=>{
                 setDrawing(true);
@@ -64,14 +63,17 @@ function Canvas() {
             canvas.removeEventListener('mouseleave', handleNotDraw);
 
         };
-    }, [drawing, , uploadedImage]); 
+    }, [drawing]); 
 
     return (
         <div>
             <button onClick={() => {
                 setDrawing(!drawing);
             }}>click</button>
-            <canvas ref={canvasRef} />
+            <canvas ref={canvasRef} 
+            height={700}
+            width={400}
+            className="canvas"/>
             <UploadFile/>
         </div>
     );
