@@ -1,20 +1,23 @@
 import React from "react";
 import { useState } from "react";
+import './style.css';
 
-function UploadFile(){
+function UploadFile(props){
 const [imageFile,uploadImageFile] = useState();
 
 function upload(event){
-    uploadImageFile(URL.createObjectURL(event.target.files[0]));
+    const file = event.target.files[0]
+    uploadImageFile(URL.createObjectURL(file));
+    props.imageSource(URL.createObjectURL(file));
 }
+
 
 return (
     <div>
         <input type="file" onChange={upload} accept="image/*"/>
-        <img src={imageFile} />
     </div>
 )
-
 }
+
 
 export default UploadFile;

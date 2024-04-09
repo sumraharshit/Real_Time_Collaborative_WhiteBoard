@@ -3,3 +3,8 @@
     background-color: whitesmoke;
 
 } 
+
+.uploadedImage{
+    height: 300px;
+    width: 300px;
+}

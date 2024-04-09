@@ -9,7 +9,8 @@ function App() {
   return (
     <div className="App">
       <h1>Canvas is Present</h1>
-     <Canvas className="canvas"/>
+     <Canvas height={700}
+            width={400}/>
      
     </div>
   );
