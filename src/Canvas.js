@@ -1,11 +1,13 @@
 import React, { useRef, useEffect, useState } from "react";
 import UploadFile from './UploadFile';
 import './style.css';
+import Input from "./Input";
 
 function Canvas(props) {
     const [drawing, setDrawing] = useState(false);
     const canvasRef = useRef(null);
     const [imageDraw,setDrawImage] = useState(null);
+    const [displayText,setDisplayText] = useState(false);
 
 
     useEffect(()=>{
@@ -70,9 +72,13 @@ function Canvas(props) {
             <button onClick={() => {
                 setDrawing(!drawing);
             }}>click</button>
+            <button onClick={()=>{
+               setDisplayText(!displayText)
+            }} >ADD TEXT</button>
             <canvas ref={canvasRef} 
             className="canvas" height={props.height} width={props.width}/>
             <UploadFile imageSource={setDrawImage}/>
+             {displayText && <Input/>}
         </div>
     );
 }
