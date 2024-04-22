@@ -1,8 +1,14 @@
 .canvas{  
     background-color: whitesmoke;
+    position: relative;
+    left: 290px;
+    
 } 
 
 .uploadedImage{
     height: 300px;
     width: 300px;
+    position: absolute;
+    top: 30px;
+    left: 100px;
 }

@@ -29,7 +29,7 @@ function App() {
      
      {canvasNumber.map((note,index)=>{
          return (<Canvas key={index} height={700}
-         width={400}/>);
+         width={1000}/>);
        
      })}
 

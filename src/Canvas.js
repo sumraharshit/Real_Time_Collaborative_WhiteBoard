@@ -15,7 +15,7 @@ function Canvas(props) {
         const image = new Image();
                 image.src = imageDraw;
                 image.onload=()=>{
-                    imageContext.drawImage(image,0,0,100,100);
+                    imageContext.drawImage(image,90,90,650,500);
                 }
 
     },[imageDraw])
