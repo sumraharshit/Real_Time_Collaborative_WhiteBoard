@@ -3,8 +3,36 @@ import UploadFile from './UploadFile';
 import './style.css';
 import Input from "./Input";
 import Home from "./Home";
+import { initSocket } from "./socket";
+import { useNavigate,useLocation, useParams } from "react-router-dom";
 
 function Canvas(props) {
+
+    const socketRef = useRef(null);
+    const location = useLocation();
+    const {boardId} = useParams();
+    const navigate = useNavigate();
+
+    useEffect(()=>{
+        const init = async()=>{
+            socketRef.current = await initSocket();
+            socketRef.current.on('connect_error',(err)=> handleError(err));
+            socketRef.current.on('connect_failed',(err)=> handleError(err));
+
+            const handleError = (err)=>{
+                console.log('socket error',err);
+                toast.error("Socket connection failed");
+                navigate("/");
+            }
+            socketRef.current.emit('join',{
+                boardId,
+                username: location.state?.username,
+            })
+        };
+        init();
+    },[]);
+
+
     const [drawing, setDrawing] = useState(false);
     const canvasRef = useRef(null);
     const [imageDraw,setDrawImage] = useState(null);
