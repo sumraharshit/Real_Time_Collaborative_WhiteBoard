@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import UploadFile from './UploadFile';
 import './style.css';
 import Input from "./Input";
+import Home from "./Home";
 
 function Canvas(props) {
     const [drawing, setDrawing] = useState(false);
@@ -78,7 +79,7 @@ function Canvas(props) {
             <canvas ref={canvasRef} 
             className="canvas" height={props.height} width={props.width}/>
             <UploadFile imageSource={setDrawImage}/>
-             {displayText && <Input/>}
+             {displayText && <Input placeholder="Add a text"/>}
         </div>
     );
 }
