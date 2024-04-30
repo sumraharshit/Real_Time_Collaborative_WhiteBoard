@@ -14,6 +14,11 @@ function Canvas(props) {
     const {boardId} = useParams();
     const navigate = useNavigate();
 
+    const [drawing, setDrawing] = useState(false);
+    const canvasRef = useRef(null);
+    const [imageDraw,setDrawImage] = useState(null);
+    const [displayText,setDisplayText] = useState(false);
+
     useEffect(()=>{
         const init = async()=>{
             socketRef.current = await initSocket();
@@ -44,36 +49,50 @@ function Canvas(props) {
                 setClients((prev)=>{
                     return prev.filter((client)=>client.socketId != socketId);
                 })
-            })
-        };
-        init();
+            });
+
+            socketRef.current.on("board_change", ({ code }) => {
+                if (code !== null) {
+                  if (canvasRef.current) {
+                    const image = new Image();
+                    image.src = code;
+                    image.onload = () => {
+                      const context = canvasRef.current.getContext('2d');
+                      context.drawImage(image, 0, 0);
+                    };
+                  }
+                }
+              });
+            };
+            init();
 
         return ()=>{
-            socketRef.current.disconnect();
+            if(socketRef.current)
+            {socketRef.current.disconnect();
             socketRef.current.off("joined");
-            socketRef.current.off("disconneted");
+            socketRef.current.off("disconneted");}
         }
     },[]);
 
 
-    const [drawing, setDrawing] = useState(false);
-    const canvasRef = useRef(null);
-    const [imageDraw,setDrawImage] = useState(null);
-    const [displayText,setDisplayText] = useState(false);
+  
 
 
     useEffect(()=>{
-        const imageContext = canvasRef.current.getContext('2d');
-        const image = new Image();
+
+        const imageContext = canvasRef.current?.getContext('2d');
+        if (imageContext && imageDraw)
+       { const image = new Image();
                 image.src = imageDraw;
                 image.onload=()=>{
                     imageContext.drawImage(image,90,90,650,500);
-                }
-
+                }}
+            
     },[imageDraw])
 
         useEffect(() => {
             const canvas = canvasRef.current;
+            if (!canvas) return;
             const context = canvas.getContext('2d');
  
           function handleDraw(event){
@@ -87,6 +106,7 @@ function Canvas(props) {
             context.fillStyle = 'black'; 
             context.stroke();  
             context.fill();  
+            canvas.dispatchEvent(new CustomEvent('canvasChange'));
         }
         }
 
@@ -105,18 +125,14 @@ function Canvas(props) {
 
 
 
-       canvas.on("change",(instance,changes)=>{
-        const {origin} = changes;
-        const code =instance.getValue();
-
-        if(origin!== 'setValue'){
-           socketRef.current.emit("board_change",{
-            boardId,
-            code,
-            
-           });
-        }
-       })
+       canvas.addEventListener('canvasChange', () => {
+        const code = canvas.toDataURL(); 
+    
+        socketRef.current.emit("board_change", {
+          boardId,
+          code,
+        });
+      });
 
         return () => {
             canvas.removeEventListener('mousedown', ()=>{
