@@ -9,7 +9,7 @@ export const initSocket = async () =>{
         transports: ["websocket"],
 
     };
-    return io("http://localhost:3000/", option);
+    return io("http://localhost:54321/", option);
 };
 
 

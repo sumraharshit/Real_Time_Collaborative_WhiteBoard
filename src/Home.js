@@ -1,8 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
-import ReactDOM from 'react-dom';
 import {v4 as uuidv4} from 'uuid';
-import Input from './Input';
 import toast from 'react-hot-toast';
 import {useNavigate} from "react-router-dom";
 
@@ -35,14 +33,14 @@ function Home(){
         return;
        }
        
-       navigate(`/whiteboard/${uniqueId}`, {state: userName});
+       navigate(`/whiteboard/${uniqueId}`, {state: {userName: userName}});
        toast.success("Joined Board Successfully!")
     }
 
     return (
         <div>
-            <Input placeholder="Enter the Board Id" value={uniqueId} changeFunction={writeId}/>
-            <Input placeholder="Enter the UserName" value={userName} changeFunction={writeUserName}/>
+            <input placeholder="Enter the Board Id" value={uniqueId} onChange={writeId}/>
+            <input placeholder="Enter the UserName" value={userName} onChange ={writeUserName}/>
              <button onClick={generateUniqueId}>Create A New Board Room</button>
              <button onClick={joinBoard}>JOIN BOARD</button>
         </div>

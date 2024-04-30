@@ -2,12 +2,13 @@ import React, { useRef, useEffect, useState } from "react";
 import UploadFile from './UploadFile';
 import './style.css';
 import Input from "./Input";
-import Home from "./Home";
 import { initSocket } from "./socket";
 import { useNavigate,useLocation, useParams } from "react-router-dom";
+import toast from "react-hot-toast";
 
 function Canvas(props) {
-
+      
+    const [clients, setClients] = useState([]);
     const socketRef = useRef(null);
     const location = useLocation();
     const {boardId} = useParams();
@@ -26,10 +27,32 @@ function Canvas(props) {
             }
             socketRef.current.emit('join',{
                 boardId,
-                username: location.state?.username,
+                userName: location.state.userName,
+            });
+
+            socketRef.current.on('joined',({clients,userName, socketId})=>{
+
+                if(userName !== location.state.userName){
+                    toast.success(`${userName} joined`);
+                }
+
+                setClients(clients);
+            });
+
+            socketRef.current.on("disconnected",({socketId,userName})=>{
+                toast.success(`${userName} left the board`);
+                setClients((prev)=>{
+                    return prev.filter((client)=>client.socketId != socketId);
+                })
             })
         };
         init();
+
+        return ()=>{
+            socketRef.current.disconnect();
+            socketRef.current.off("joined");
+            socketRef.current.off("disconneted");
+        }
     },[]);
 
 
@@ -82,6 +105,19 @@ function Canvas(props) {
 
 
 
+       canvas.on("change",(instance,changes)=>{
+        const {origin} = changes;
+        const code =instance.getValue();
+
+        if(origin!== 'setValue'){
+           socketRef.current.emit("board_change",{
+            boardId,
+            code,
+            
+           });
+        }
+       })
+
         return () => {
             canvas.removeEventListener('mousedown', ()=>{
                 setDrawing(true);
@@ -92,6 +128,8 @@ function Canvas(props) {
             canvas.removeEventListener('mouseleave', handleNotDraw);
 
         };
+
+
     }, [drawing]); 
 
 

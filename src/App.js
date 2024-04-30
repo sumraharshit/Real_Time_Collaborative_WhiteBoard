@@ -1,8 +1,7 @@
 import React from "react";
-import { ReactDOM } from 'react';
 import Canvas from "./Canvas";
 import {useState} from "react";
-import toast,{ Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import { BrowserRouter,Routes,Route } from "react-router-dom";
 import Home from "./Home";
 
