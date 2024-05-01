@@ -8,14 +8,14 @@ import Home from "./Home";
 
 
 function App() {
-  const [canvasNumber,setCanvasNumber] = useState([0]);
+  // const [canvasNumber,setCanvasNumber] = useState([0]);
 
 
-  function addCanavas(){
-    setCanvasNumber((prevValue)=>{
-      return ([...prevValue,0]);
-    })
-  }
+  // function addCanavas(){
+  //   setCanvasNumber((prevValue)=>{
+  //     return ([...prevValue,0]);
+  //   })
+  // }
 
   // document.addEventListener('scroll',(event)=>{
   //     if(window.scrollY%70===0){
@@ -26,17 +26,21 @@ function App() {
 
   return (
     <div className="App">
-      <button onClick={addCanavas}>+</button>
+      {/* <button onClick={addCanavas}>+</button> */}
       <h1>Canvas is Present</h1>
       <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
         
-        <Route path="/whiteboard/:boardId" element={canvasNumber.map((note,index)=>{
+        {/* <Route path="/whiteboard/:boardId" element={canvasNumber.map((note,index)=>{
          return (<Canvas key={index} height={700}
-         width={1000}/>);
-       
-     })}/></Routes> </BrowserRouter>
+         width={1000}/>); */}
+
+         <Route path="/whiteboard/:boardId" element={
+          <Canvas height={700}
+          width={1000}/>}/>
+          </Routes> 
+          </BrowserRouter>
       <Toaster position="top-center"></Toaster>
       
       

@@ -16,8 +16,17 @@ function Canvas(props) {
 
     const [drawing, setDrawing] = useState(false);
     const canvasRef = useRef(null);
-    const [imageDraw,setDrawImage] = useState(null);
+    const [imageDraw,setImageDraw] = useState(null);
     const [displayText,setDisplayText] = useState(false);
+
+    const handleImageUploadSuccess = (imageUrl) => {
+        setImageDraw(imageUrl);
+
+        socketRef.current.emit("image_update", {
+            boardId,
+            imageUrl,
+          });
+        };
 
     useEffect(()=>{
         const init = async()=>{
@@ -42,28 +51,30 @@ function Canvas(props) {
                 }
 
                 setClients(clients);
+                
             });
 
-            socketRef.current.on("disconnected",({socketId,userName})=>{
+            socketRef.current.on("disconnected", ({ socketId, userName }) => {
                 toast.success(`${userName} left the board`);
-                setClients((prev)=>{
-                    return prev.filter((client)=>client.socketId != socketId);
-                })
-            });
+                setClients((prev) => prev.filter((client) => client.socketId !== socketId));
+              });
 
             socketRef.current.on("board_change", ({ code }) => {
                 if (code !== null) {
                   if (canvasRef.current) {
+                    const context = canvasRef.current.getContext('2d');
                     const image = new Image();
                     image.src = code;
-                    image.onload = () => {
-                      const context = canvasRef.current.getContext('2d');
-                      context.drawImage(image, 0, 0);
-                    };
+                    image.onload = () => context.drawImage(image, 0, 0); 
                   }
                 }
               });
+
+              socketRef.current.on("image_update", ({ imageUrl }) => {
+                setImageDraw(imageUrl); 
+              });
             };
+
             init();
 
         return ()=>{
@@ -160,7 +171,7 @@ function Canvas(props) {
             }} >ADD TEXT</button>
             <canvas ref={canvasRef} 
             className="canvas" height={props.height} width={props.width}/>
-            <UploadFile imageSource={setDrawImage}/>
+            <UploadFile imageSource={handleImageUploadSuccess}/>
              {displayText && <Input placeholder="Add a text"/>}
         </div>
     );
