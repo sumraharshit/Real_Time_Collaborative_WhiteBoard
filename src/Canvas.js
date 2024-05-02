@@ -6,6 +6,7 @@ import { initSocket } from "./socket";
 import { useNavigate,useLocation, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import {fabric} from "fabric";
+import Button from "./Button";
 
 function Canvas(props) {
       
@@ -14,16 +15,57 @@ function Canvas(props) {
     const location = useLocation();
     const {boardId} = useParams();
     const navigate = useNavigate();
-
-    // let canvas2 = new fabric.Canvas(props.id);
-    
-
+    const [width,setWidth] = useState(1);
 
     const [drawing, setDrawing] = useState(false);
     const canvasRef = useRef(null);
     const [imageDraw,setImageDraw] = useState(null);
     const [displayText,setDisplayText] = useState(false);
 
+    
+    let shapeColor;
+    function changeColour(event){
+      let color = event.target.value;
+      switch(color){
+    
+        case "#000000":
+          shapeColor="#000000";
+          break;
+    
+        case "#0000FF":
+          shapeColor="#0000FF";
+          break;
+    
+        case "#FF0000":
+          shapeColor="#FF0000";
+          break;
+    
+        case "#FFC0CB":
+          shapeColor="#FFC0CB";
+          break;
+    
+        case "#00FF00":
+          shapeColor="#00FF00";
+          break;
+          
+      }
+    }
+     
+    function lineWidth(event){
+        // let name = event.target.name;
+        // let currentWidth = width;
+        // if(name === "increase"){
+        //    setWidth((prevWidth)=>prevWidth +1);  
+        // }
+
+        // else if(name === "decrease"){
+        //   setWidth((prevWidth)=>prevWidth-1);
+        //   }
+        let value = event.target.value;
+        setWidth((prev)=>prev+1);
+        }
+
+    
 
     const handleImageUploadSuccess = (imageUrl) => {
         setImageDraw(imageUrl);
@@ -113,8 +155,10 @@ function Canvas(props) {
             setDrawing(true);
 
             context.beginPath();
+            context.lineWidth = width;
             context.moveTo(event.clientX - rect.left,event.clientY - rect.top);
             context.stroke();  
+            context.strokeStyle = shapeColor;
             context.fill();  
             canvas.dispatchEvent(new CustomEvent('canvasChange'));
         
@@ -122,15 +166,18 @@ function Canvas(props) {
 
         function handleNotDraw(event){
           setDrawing(false);
-         
+          context.lineWidth = width;
           context.lineTo(event.clientX - rect.left+1,event.clientY - rect.top+1);
           context.stroke();
+          context.strokeStyle = shapeColor;
           context.closePath();
          }
 
          function handleMoveDraw(event) {
               if(drawing){
+                context.lineWidth = width;
                 context.lineTo(event.clientX - rect.left+1,event.clientY - rect.top+1);
+                context.strokeStyle = shapeColor;
                 context.stroke();
               }
          }
@@ -198,9 +245,16 @@ function Canvas(props) {
             <button onClick={()=>{
                setDisplayText(!displayText)
             }} >ADD TEXT</button>
+            <button value={width} name="increase" onClick={lineWidth}/>
+            <button value={width} name="decrease" onClick={lineWidth}/>
             <canvas ref={canvasRef} 
             className="canvas" height={props.height} width={props.width} id={props.id}/>
             <UploadFile imageSource={handleImageUploadSuccess}/>
+            <Button value="#000000" name="Black" buttonFunction={changeColour}/>
+            <Button value="#0000FF" name="Blue"  buttonFunction={changeColour}/>
+            <Button value="#FF0000" name="Red" buttonFunction={changeColour}/>
+            <Button value="#FFC0CB" name="Pink" buttonFunction={changeColour}/>
+            <Button value="#00FF00" name="Green" buttonFunction={changeColour}/>
              {displayText && <Input placeholder="Add a text"/>}
         </div>
     );
