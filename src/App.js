@@ -38,7 +38,7 @@ function App() {
 
          <Route path="/whiteboard/:boardId" element={
           <Canvas height={700}
-          width={1000}/>}/>
+          width={1000}  id="Canvas"/>}/>
           </Routes> 
           </BrowserRouter>
       <Toaster position="top-center"></Toaster>

@@ -5,6 +5,7 @@ import Input from "./Input";
 import { initSocket } from "./socket";
 import { useNavigate,useLocation, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
+import {fabric} from "fabric";
 
 function Canvas(props) {
       
@@ -14,10 +15,15 @@ function Canvas(props) {
     const {boardId} = useParams();
     const navigate = useNavigate();
 
+    // let canvas2 = new fabric.Canvas(props.id);
+    
+
+
     const [drawing, setDrawing] = useState(false);
     const canvasRef = useRef(null);
     const [imageDraw,setImageDraw] = useState(null);
     const [displayText,setDisplayText] = useState(false);
+
 
     const handleImageUploadSuccess = (imageUrl) => {
         setImageDraw(imageUrl);
@@ -69,7 +75,7 @@ function Canvas(props) {
                   }
                 }
               });
-
+                 
               socketRef.current.on("image_update", ({ imageUrl }) => {
                 setImageDraw(imageUrl); 
               });
@@ -85,10 +91,6 @@ function Canvas(props) {
         }
     },[]);
 
-
-  
-
-
     useEffect(()=>{
 
         const imageContext = canvasRef.current?.getContext('2d');
@@ -102,42 +104,69 @@ function Canvas(props) {
     },[imageDraw])
 
         useEffect(() => {
+            
             const canvas = canvasRef.current;
             if (!canvas) return;
             const context = canvas.getContext('2d');
- 
+            const rect = canvas.getBoundingClientRect();
           function handleDraw(event){
-           if(drawing)
-            { const rect = canvas.getBoundingClientRect();
-            const x = event.clientX - rect.left;
-            const y = event.clientY - rect.top;
+            setDrawing(true);
 
             context.beginPath();
-            context.arc(x,y,4,-1,2*Math.PI);
-            context.fillStyle = 'black'; 
+            context.moveTo(event.clientX - rect.left,event.clientY - rect.top);
             context.stroke();  
             context.fill();  
             canvas.dispatchEvent(new CustomEvent('canvasChange'));
-        }
-        }
-
-       canvas.addEventListener('mousedown', ()=>{
-        setDrawing(true);
-       });
-
-       canvas.addEventListener('mousemove', handleDraw);
-       
-       function handleNotDraw(){
-        setDrawing(false);
+        
        }
+
+        function handleNotDraw(event){
+          setDrawing(false);
+         
+          context.lineTo(event.clientX - rect.left+1,event.clientY - rect.top+1);
+          context.stroke();
+          context.closePath();
+         }
+
+         function handleMoveDraw(event) {
+              if(drawing){
+                context.lineTo(event.clientX - rect.left+1,event.clientY - rect.top+1);
+                context.stroke();
+              }
+         }
+
+       canvas.addEventListener('mousedown',
+        
+        handleDraw
+          
+        // BAAD MEIN OPTIMISE KRENGE!!  
+        // context.beginPath();
+        //     context.moveTo(event.clientX - rect.left,event.clientY - rect.top);
+        //     context.stroke(); 
+        //     canvas.dispatchEvent(new CustomEvent('canvasChange'));
+       );
+
+     canvas.addEventListener('mousemove', handleMoveDraw);
+     
+
+    //  DEKHTE H BAAD MEIN!!
+    // canvas.addEventListener('mousemove', (event)=>{
+    //   if(drawing){
+    //     context.lineTo(event.clientX - rect.left+1,event.clientY - rect.top+1);
+    //     context.stroke();
+    //     canvas.dispatchEvent(new CustomEvent('canvasChange'));
+    //   }
+
        
-       canvas.addEventListener('mouseup', handleNotDraw);
-       canvas.addEventListener('mouseleave', handleNotDraw);
+      canvas.addEventListener('mouseup', handleNotDraw);
+      canvas.addEventListener('mouseleave', ()=>{
+        setDrawing(false);
+      });
 
 
 
        canvas.addEventListener('canvasChange', () => {
-        const code = canvas.toDataURL(); 
+         const code = canvas.toDataURL(); 
     
         socketRef.current.emit("board_change", {
           boardId,
@@ -150,7 +179,7 @@ function Canvas(props) {
                 setDrawing(true);
             });
             
-            canvas.removeEventListener('mousemove', handleDraw);
+            canvas.removeEventListener('mousemove',handleMoveDraw)
             canvas.removeEventListener('mouseup', handleNotDraw);
             canvas.removeEventListener('mouseleave', handleNotDraw);
 
@@ -170,7 +199,7 @@ function Canvas(props) {
                setDisplayText(!displayText)
             }} >ADD TEXT</button>
             <canvas ref={canvasRef} 
-            className="canvas" height={props.height} width={props.width}/>
+            className="canvas" height={props.height} width={props.width} id={props.id}/>
             <UploadFile imageSource={handleImageUploadSuccess}/>
              {displayText && <Input placeholder="Add a text"/>}
         </div>
