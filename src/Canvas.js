@@ -15,7 +15,7 @@ function Canvas(props) {
     const location = useLocation();
     const {boardId} = useParams();
     const navigate = useNavigate();
-    const [width,setWidth] = useState(1);
+    const [width,setWidth] = useState(1.0);
 
     const [drawing, setDrawing] = useState(false);
     const canvasRef = useRef(null);
@@ -61,8 +61,12 @@ function Canvas(props) {
         // else if(name === "decrease"){
         //   setWidth((prevWidth)=>prevWidth-1);
         //   }
-        let value = event.target.value;
-        setWidth((prev)=>prev+1);
+        let name = event.target.name;
+        if(name === 'increase')
+        setWidth((prev)=>{return (prev<10 && prev+1)});
+
+        else if(name === 'decrease')
+          setWidth((prev)=>{return (prev>1 && prev-1)});
         }
 
     

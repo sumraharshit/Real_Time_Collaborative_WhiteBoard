@@ -3,6 +3,7 @@ import { useState } from 'react';
 import {v4 as uuidv4} from 'uuid';
 import toast from 'react-hot-toast';
 import {useNavigate} from "react-router-dom";
+import './style.css';
 
 function Home(){
     const navigate = useNavigate();
@@ -38,11 +39,13 @@ function Home(){
     }
 
     return (
-        <div>
-            <input placeholder="Enter the Board Id" value={uniqueId} onChange={writeId}/>
-            <input placeholder="Enter the UserName" value={userName} onChange ={writeUserName}/>
-             <button onClick={generateUniqueId}>Create A New Board Room</button>
-             <button onClick={joinBoard}>JOIN BOARD</button>
+        <div className='home-details'>
+            <h1>UNLEASH YOUR IDEAS AND CREATIVITY
+            </h1>
+            <input className="input" placeholder="Enter the Board Id" value={uniqueId} onChange={writeId}/>
+            <input className="input" placeholder="Enter the UserName" value={userName} onChange ={writeUserName}/>
+             <div><button className="button" onClick={generateUniqueId} style={{fontSize: "20px"}}>Create A New Board Room</button>
+             <button className="button" style={{backgroundColor: "green", fontSize: "20px"}} onClick={joinBoard}>JOIN BOARD</button></div>
         </div>
     )
 }

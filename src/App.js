@@ -20,8 +20,8 @@ function App() {
 
   return (
     <div className="App">
-     
-     <h1>Canvas is Present</h1>
+{/*      
+     <h1>Canvas is Present</h1> */}
       <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
