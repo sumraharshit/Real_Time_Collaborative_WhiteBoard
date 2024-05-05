@@ -1,27 +1,31 @@
 import React, { useRef, useEffect, useState } from "react";
 import UploadFile from './UploadFile';
 import './style.css';
-import Input from "./Input";
+import './styleCanvas.css';
 import { initSocket } from "./socket";
 import { useNavigate,useLocation, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
-import {fabric} from "fabric";
 import Button from "./Button";
+import { MdDraw } from "react-icons/md";
+import { AiOutlineClear } from "react-icons/ai";
+import { FaImage,FaRegSquareMinus } from "react-icons/fa6";
+import { FaRegPlusSquare,FaMicrophoneAlt } from "react-icons/fa";
+
 
 function Canvas(props) {
       
+
     const [clients, setClients] = useState([]);
     const socketRef = useRef(null);
     const location = useLocation();
     const {boardId} = useParams();
     const navigate = useNavigate();
     const [width,setWidth] = useState(1.0);
+    const [startDrawing,setStartDrawing] = useState(true);
 
     const [drawing, setDrawing] = useState(false);
     const canvasRef = useRef(null);
     const [imageDraw,setImageDraw] = useState(null);
-    const [displayText,setDisplayText] = useState(false);
-
     
     let shapeColor;
     function changeColour(event){
@@ -52,15 +56,6 @@ function Canvas(props) {
     }
      
     function lineWidth(event){
-        // let name = event.target.name;
-        // let currentWidth = width;
-        // if(name === "increase"){
-        //    setWidth((prevWidth)=>prevWidth +1);  
-        // }
-
-        // else if(name === "decrease"){
-        //   setWidth((prevWidth)=>prevWidth-1);
-        //   }
         let name = event.target.name;
         if(name === 'increase')
         setWidth((prev)=>{return (prev<10 && prev+1)});
@@ -69,7 +64,8 @@ function Canvas(props) {
           setWidth((prev)=>{return (prev>1 && prev-1)});
         }
 
-    
+       
+      
 
     const handleImageUploadSuccess = (imageUrl) => {
         setImageDraw(imageUrl);
@@ -155,59 +151,45 @@ function Canvas(props) {
             if (!canvas) return;
             const context = canvas.getContext('2d');
             const rect = canvas.getBoundingClientRect();
-          function handleDraw(event){
+          function handleDraw(event){ 
+            if(startDrawing)
+       {
             setDrawing(true);
-
             context.beginPath();
             context.lineWidth = width;
             context.moveTo(event.clientX - rect.left,event.clientY - rect.top);
             context.stroke();  
             context.strokeStyle = shapeColor;
             context.fill();  
+            }
             canvas.dispatchEvent(new CustomEvent('canvasChange'));
-        
        }
 
         function handleNotDraw(event){
-          setDrawing(false);
+         if(startDrawing)
+          {setDrawing(false);
           context.lineWidth = width;
           context.lineTo(event.clientX - rect.left+1,event.clientY - rect.top+1);
           context.stroke();
           context.strokeStyle = shapeColor;
-          context.closePath();
+          context.closePath();}
+          canvas.dispatchEvent(new CustomEvent('canvasChange'));
          }
 
          function handleMoveDraw(event) {
-              if(drawing){
+              if(startDrawing && drawing){
                 context.lineWidth = width;
                 context.lineTo(event.clientX - rect.left+1,event.clientY - rect.top+1);
                 context.strokeStyle = shapeColor;
                 context.stroke();
               }
+              canvas.dispatchEvent(new CustomEvent('canvasChange'));
          }
 
-       canvas.addEventListener('mousedown',
-        
-        handleDraw
-          
-        // BAAD MEIN OPTIMISE KRENGE!!  
-        // context.beginPath();
-        //     context.moveTo(event.clientX - rect.left,event.clientY - rect.top);
-        //     context.stroke(); 
-        //     canvas.dispatchEvent(new CustomEvent('canvasChange'));
-       );
+      canvas.addEventListener('mousedown', handleDraw);
 
      canvas.addEventListener('mousemove', handleMoveDraw);
      
-
-    //  DEKHTE H BAAD MEIN!!
-    // canvas.addEventListener('mousemove', (event)=>{
-    //   if(drawing){
-    //     context.lineTo(event.clientX - rect.left+1,event.clientY - rect.top+1);
-    //     context.stroke();
-    //     canvas.dispatchEvent(new CustomEvent('canvasChange'));
-    //   }
-
        
       canvas.addEventListener('mouseup', handleNotDraw);
       canvas.addEventListener('mouseleave', ()=>{
@@ -237,29 +219,65 @@ function Canvas(props) {
         };
 
 
-    }, [drawing]); 
+    }, [drawing, startDrawing]); 
 
 
+    useEffect(() => {
+      
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+
+      const handleCanvasChange = () => {
+          const code = canvas.toDataURL();
+          socketRef.current.emit('board_change', { boardId, code });
+      };
+
+      canvas.addEventListener('canvasChange', handleCanvasChange);
+
+      return () => {
+          canvas.removeEventListener('canvasChange', handleCanvasChange);
+      };
+  }, [boardId]);
+
+    
+  function clearCanvas(){
+    const canvas = canvasRef.current;
+    const context = canvas.getContext('2d');
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    canvas.dispatchEvent(new CustomEvent('canvasChange'));
+  }
 
     return (
-        <div>
-            <button onClick={() => {
-                setDrawing(!drawing);
-            }}>click</button>
-            <button onClick={()=>{
-               setDisplayText(!displayText)
-            }} >ADD TEXT</button>
-            <button value={width} name="increase" onClick={lineWidth}/>
-            <button value={width} name="decrease" onClick={lineWidth}/>
-            <canvas ref={canvasRef} 
-            className="canvas" height={props.height} width={props.width} id={props.id}/>
-            <UploadFile imageSource={handleImageUploadSuccess}/>
-            <Button value="#000000" name="Black" buttonFunction={changeColour}/>
+        <div className="canvasPage">
+          <div className="column left">
+          <h1>Users Online:</h1>
+        
+          {clients.map((client) => (
+            <div key={client.socketId} className="users"><div class="box">{client.userName.charAt(0)}</div><h2>{client.userName}</h2></div>
+          ))}
+        
+          </div>
+          <div className="column right">
+            <canvas ref={canvasRef}   
+            className="canvas" height={props.height} width={props.width}/>  
+        </div>
+        <div className="tools">
+        <button style={{backgroundColor: "#243b55"}} className="button"><FaMicrophoneAlt size="20"/></button>
+         <UploadFile imageSource={handleImageUploadSuccess} id="uploadedImage"/>
+            {/* NEED TO TRY TO CHANGE The color Button elements*/}
+            <Button value="#000000" name="Black" buttonFunction={changeColour}/>  
             <Button value="#0000FF" name="Blue"  buttonFunction={changeColour}/>
             <Button value="#FF0000" name="Red" buttonFunction={changeColour}/>
             <Button value="#FFC0CB" name="Pink" buttonFunction={changeColour}/>
             <Button value="#00FF00" name="Green" buttonFunction={changeColour}/>
-             {displayText && <Input placeholder="Add a text"/>}
+            <button style={{backgroundColor: "#243b55"}} className="button" value={width} name="decrease" onClick={lineWidth}><FaRegSquareMinus size="20"/></button>
+            <button style={{backgroundColor: "#243b55"}} className="button" value={width} name="increase" onClick={lineWidth}><FaRegPlusSquare  size="20"/></button>
+           
+            <button style={{backgroundColor: "#243b55"}} className="button" onClick={() => {
+               setStartDrawing(prev => !prev);
+           }}><MdDraw size="20"/></button>
+           <button style={{backgroundColor: "#243b55"}} className="button" onClick={clearCanvas}><AiOutlineClear size="20"/></button>
+        </div>
         </div>
     );
 }

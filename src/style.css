@@ -8,7 +8,6 @@ body{
 .canvas{  
     background-color: whitesmoke;
     position: relative;
-    left: 290px;
 } 
 
 
@@ -99,4 +98,37 @@ h1{
     color: white;
      font-family: 'Permanent Marker', cursive;
      font-size: 40px;
+}
+
+.box{
+  align-items: center;
+  background-clip: padding-box;
+  background-color: #243b55;
+  border: 1px solid transparent;
+  border-radius: .25rem;
+  box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
+  box-sizing: border-box;
+  font-family: system-ui,-apple-system,system-ui,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 20px;
+  
+  justify-content: center;
+  line-height: 1.25;
+  color: #fff;
+  padding: calc(.875rem - 1px) calc(1.5rem - 1px);
+  position: relative;
+  cursor: default;
+}
+
+.users{
+  display: flex;
+  justify-content: space-evenly;
+  font-size: 25px;
+  text-align: center;
+  margin: 10px;
+  font-weight: 600;
+}
+
+h2{
+  font-size: 25px;
+  color: white;
 }

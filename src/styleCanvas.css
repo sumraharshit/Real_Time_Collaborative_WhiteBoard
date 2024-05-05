@@ -1,0 +1,38 @@
+
+.column{
+    padding: 10px;
+    position: relative;
+}
+
+.left{
+    
+    background-color: black;
+    height: 700px;
+    width: 20%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.right{
+    width:80%;
+    position: relative;
+}
+
+.canvasPage{margin: 0;
+    padding: 0;
+    display: flex;
+    position: relative;
+   
+}
+
+
+.tools{
+    position: fixed;
+    bottom:10px;
+    left:30vw;
+    display: flex;
+    width:max-content;
+    background-color: grey;
+}

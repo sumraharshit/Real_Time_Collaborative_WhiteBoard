@@ -12,9 +12,18 @@ function App() {
   
   // const [color,setColor] = useState("#000000");
    
-
-
+  const [height,setHeight] = useState(700);
+  const [width,setWidth] = useState(1200);
   
+//  window.onscroll = function (event) {
+     
+//   if(window.scrollY > 0)
+//     setHeight(height + 10);
+
+//   if(window.scrollX>0)
+//     setWidth(width + 10);
+//  }
+
 
    
 
@@ -31,8 +40,8 @@ function App() {
          width={1000}/>); */}
 
          <Route path="/whiteboard/:boardId" element={
-          <Canvas height={700}
-          width={1000}  id="Canvas" />}/>
+          <Canvas height={height}
+          width={width}  id="Canvas" />}/>
           </Routes> 
           </BrowserRouter>
       <Toaster position="top-center"></Toaster>
@@ -46,7 +55,7 @@ function App() {
      })} */}
 
      {/* <Input /> */}
-     
+
     </div>
   );
 }

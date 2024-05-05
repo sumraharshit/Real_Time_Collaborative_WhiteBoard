@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import './style.css';
+import { FaImage,FaRegSquareMinus } from "react-icons/fa6";
 
 function UploadFile(props){
 const [imageFile,uploadImageFile] = useState();
@@ -14,7 +15,7 @@ function upload(event){
 
 return (
     <div>
-        <input type="file" onChange={upload} accept="image/*"/>
+        <label for="uploadedImage"><input type="file" onChange={upload} accept="image/*" id={props.id} style={{display: "none"}}/><FaImage size="40" className="button" style={{backgroundColor: "#243b55"}}/></label>
     </div>
 )
 }
