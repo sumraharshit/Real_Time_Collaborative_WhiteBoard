@@ -27,8 +27,9 @@ function Canvas(props) {
     const canvasRef = useRef(null);
     const [imageDraw,setImageDraw] = useState(null);
     const [doUndo,setUndo] = useState(false);
+    const [prev,setPrev] = useState({});
 
-    const [points,setPoints]=useState([]);
+    const [points,setPoints] = useState([]);
     const [pcollection,setPCollection] = useState([]);
     
     const [shapeColor,setShapeColor] = useState("#000000");
@@ -163,13 +164,11 @@ function Canvas(props) {
             context.lineWidth = width;
             const x = event.clientX - rect.left;
             const y = event.clientY - rect.top;
-            setPoints([]);
             context.moveTo(x,y);
             context.stroke();  
             context.strokeStyle = shapeColor;
-            setPoints((prev)=>{
-              return ([...prev,{x, y, size: width, color: shapeColor, mode: "begin"}]);
-            });
+            setPoints(prev => [...prev, {X: x, Y: y, size: width, color: shapeColor}]);
+           
             }
             canvas.dispatchEvent(new CustomEvent('canvasChange'));
        }
@@ -180,6 +179,7 @@ function Canvas(props) {
 
           console.log(points);
           setPCollection((prev) => [...prev, points]);
+          setPoints([]); 
           console.log(pcollection);
           canvas.dispatchEvent(new CustomEvent('canvasChange'));
          }
@@ -192,9 +192,7 @@ function Canvas(props) {
                 context.lineTo(x,y);
                 context.strokeStyle = shapeColor;
                 context.stroke();
-                setPoints((prev)=>{
-                  return ([...prev,{x, y, size: width, color: shapeColor, mode: "draw"}]);
-                });
+                setPoints(prev => [...prev, {X: x, Y: y, size: width, color: shapeColor}]);
                
                 console.log(points);
               }
@@ -262,40 +260,42 @@ function Canvas(props) {
     canvas.dispatchEvent(new CustomEvent('canvasChange'));
   }
 
+  useEffect(()=>{
+
+    if (doUndo) {
+      redraw();
+    }
+
   function redraw() {
     const canvas = canvasRef.current;
     const context = canvas.getContext('2d');
     context.clearRect(0, 0, canvas.width, canvas.height);
-    pcollection.forEach(points => {
-        if (points.length > 0) {
+    const remainingPoints = pcollection.slice(0, pcollection.length - 1);
+    remainingPoints.forEach(points => {  
             context.beginPath();
-            context.moveTo(points[0].x, points[0].y);
-            for (let i = 1; i < points.length; i++) {
-                let point = points[i];
+            setPrev({X: points[0].X, Y: points[0].Y, size: points[0].size,color: points[0].color});
+            context.moveTo(prev.X, prev.Y);
+           points.forEach(point=>{
+                
                 context.lineWidth = point.size;
                 context.strokeStyle = point.color;
-                context.lineTo(point.x, point.y);
+              
+                context.lineTo(point.X, point.Y);
                 context.stroke();
-            }
-        }
+                
+            });
+        
     });
+    setPCollection(remainingPoints); 
+    setUndo(false);
 }
+
+},[doUndo]);
 
   function undo() {
     setUndo(true);
-    setPCollection((prev) => {
-        const newPCollection = [...prev];
-        newPCollection.pop();
-        return newPCollection;
-    });
 }
 
-useEffect(() => {
-  if(doUndo)
-   {redraw();}
-  
-  setUndo(false);
-}, [doUndo]);
 
     return (
         <div className="canvasPage">
