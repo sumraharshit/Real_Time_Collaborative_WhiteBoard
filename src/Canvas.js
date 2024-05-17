@@ -9,7 +9,7 @@ import Button from "./Button";
 import { MdDraw } from "react-icons/md";
 import { AiOutlineClear } from "react-icons/ai";
 import { FaImage,FaRegSquareMinus } from "react-icons/fa6";
-import { FaRegPlusSquare,FaMicrophoneAlt } from "react-icons/fa";
+import { FaRegPlusSquare,FaMicrophoneAlt,FaUndoAlt } from "react-icons/fa";
 
 
 function Canvas(props) {
@@ -26,6 +26,9 @@ function Canvas(props) {
     const [drawing, setDrawing] = useState(false);
     const canvasRef = useRef(null);
     const [imageDraw,setImageDraw] = useState(null);
+
+    const [points,setPoints]=useState([]);
+    const [pcollection,setPCollection] = useState([]);
     
     let shapeColor;
     function changeColour(event){
@@ -157,10 +160,14 @@ function Canvas(props) {
             setDrawing(true);
             context.beginPath();
             context.lineWidth = width;
-            context.moveTo(event.clientX - rect.left,event.clientY - rect.top);
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top
+            context.moveTo(x,y);
             context.stroke();  
             context.strokeStyle = shapeColor;
-            context.fill();  
+            setPoints((prev)=>{
+              return ([...prev,{x, y, size: width, color: shapeColor, mode: "draw"}]);
+            });
             }
             canvas.dispatchEvent(new CustomEvent('canvasChange'));
        }
@@ -169,19 +176,36 @@ function Canvas(props) {
          if(startDrawing)
           {setDrawing(false);
           context.lineWidth = width;
-          context.lineTo(event.clientX - rect.left+1,event.clientY - rect.top+1);
+          const x = event.clientX - rect.left+1;
+          const y = event.clientY - rect.top+1;
+          context.lineTo(x,y);
           context.stroke();
           context.strokeStyle = shapeColor;
-          context.closePath();}
+          context.closePath();
+          setPoints((prev)=>{
+            return ([...prev,{x, y, size: width, color: shapeColor, mode: "draw"}]);
+          });
+          console.log(points);}
+          setPCollection((prev)=>{
+            return([...prev,points]);
+          });
+          console.log(pcollection);
           canvas.dispatchEvent(new CustomEvent('canvasChange'));
          }
 
          function handleMoveDraw(event) {
               if(startDrawing && drawing){
                 context.lineWidth = width;
-                context.lineTo(event.clientX - rect.left+1,event.clientY - rect.top+1);
+                const x = event.clientX - rect.left+1;
+                const y = event.clientY - rect.top+1;
+                context.lineTo(x,y);
                 context.strokeStyle = shapeColor;
                 context.stroke();
+                setPoints((prev)=>{
+                  return ([...prev,{x, y, size: width, color: shapeColor, mode: "draw"}]);
+                });
+               
+                console.log(points);
               }
               canvas.dispatchEvent(new CustomEvent('canvasChange'));
          }
@@ -247,6 +271,58 @@ function Canvas(props) {
     canvas.dispatchEvent(new CustomEvent('canvasChange'));
   }
 
+  function redraw(){
+    const canvas = canvasRef.current;
+    const context = canvas.getContext('2d');
+    if(pcollection.length===0)
+      return;
+
+    context.clearRect(0,0,canvas.width,canvas.height);
+     pcollection.forEach(points=>{
+
+      for(let i=0;i<points.length;i++){
+        let point = points[i];
+  
+        let begin = false;
+  
+        if(context.lineWidth !== point.size){
+             context.lineWidth = points.size;
+             begin = true;
+        }
+  
+        if(context.strokeStyle !== point.color)
+          {
+            context.strokeStyle = point.color;
+            begin = true;
+          }
+  
+          if(point.mode === "begin" || begin)
+            {
+              context.beginPath();
+              context.moveTo(point.x,point.y);
+            }
+            
+            if(point.mode==="draw")
+            {context.lineTo(point.x,point.y);}
+  
+            if(point.mode === "end" || (i===points.length-1))
+              {
+                context.stroke();
+              }
+
+              context.stroke();
+      }
+
+     });
+    
+    
+  }
+
+  function undo() {
+    pcollection.pop();
+    redraw();
+  }
+
     return (
         <div className="canvasPage">
           <div className="column left">
@@ -277,6 +353,7 @@ function Canvas(props) {
                setStartDrawing(prev => !prev);
            }}><MdDraw size="20"/></button>
            <button style={{backgroundColor: "#243b55"}} className="button" onClick={clearCanvas}><AiOutlineClear size="20"/></button>
+           <button style={{backgroundColor: "#243b55"}} className="button" onClick={undo}><FaUndoAlt size="20"/></button>
         </div>
         </div>
     );
