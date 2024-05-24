@@ -5,11 +5,11 @@
 ## Features
 
 <ul>
-<b>Real-time Drawing:</b>See others' strokes as they happen.
-<b>Board Rooms:</b> Unique IDs let you create private collaboration spaces.
-<b>Undo/Redo:</b> Fix mistakes easily.
-<b>Image Uploads:</b> Enhance your ideas with visuals.
-<b>>Pen Customization:</b Change color and width for expressive drawing.
+<b>Real-time Drawing:</b>See others' strokes as they happen.<br>
+<b>Board Rooms:</b> Unique IDs let you create private collaboration spaces.<br>
+<b>Undo/Redo:</b> Fix mistakes easily.<br>
+<b>Image Uploads:</b> Enhance your ideas with visuals.<br>
+<b>Pen Customization:</b> Change color and width for expressive drawing.<br>
 </ul>
 
 ## Learn More
