@@ -6,7 +6,6 @@ import { initSocket } from "./socket";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import Button from "./Button";
-import { MdDraw } from "react-icons/md";
 import { AiOutlineClear } from "react-icons/ai";
 import { FaImage, FaRegSquareMinus } from "react-icons/fa6";
 import { FaRegPlusSquare, FaMicrophoneAlt, FaUndoAlt } from "react-icons/fa";
