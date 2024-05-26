@@ -31,9 +31,10 @@
 
 ## Screenshots
 
-![Create or Join Board](public/screenshots/Create_or_Join_Board.png)
-![Whiteboard](public/screenshots/Whiteboard.png)
-![Collaboration](public/screenshots/Whiteboard.png)
+<img src="public/screenshots/Create_or_Join_Board.png" alt="Create or Join Board" width="500" /><br>
+<img src="public/screenshots/Whiteboard.png" alt="Whiteboard" width="500" /><br>
+<img src="public/screenshots/Collaboration.png" alt="Collaboration" width="500"/>
+
 
 
 ## How It Works
