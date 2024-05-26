@@ -21,13 +21,15 @@
 </ol>
 
 ## Tech Stack
-<li><b>Frontend:</b> ReactJS, CSS</li>
-<li><b>Backend:</b> Node.js</li>
-<li><b>Collaboration:</b> Socket.IO</li>
-<li><b>Unique IDs:</b> UUID</li>
-<li><b>Pop-up Messages:</b> React Toaster</li>
+<ol>
+<li><b>Frontend:</b> ReactJS, CSS</li><br>
+<li><b>Backend:</b> Node.js</li><br>
+<li><b>Collaboration:</b> Socket.IO</li><br>
+<li><b>Unique IDs:</b> UUID</li><br>
+<li><b>Pop-up Messages:</b> React Toaster</li><br>
+</ol>
 
-##How It Works
+## How It Works
 <ul>
 <li>A user can create a new board unique Id or can joins a existing board room using a unique ID.</li>
 <li>Socket.IO establishes a persistent connection between clients and the server.</li>
