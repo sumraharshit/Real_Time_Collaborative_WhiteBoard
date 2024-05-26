@@ -5,29 +5,29 @@
 ## Features
 
 <ul>
-<b>Real-time Drawing:</b>See others' strokes as they happen.<br>
-<b>Board Rooms:</b> Unique IDs let you create private collaboration spaces.<br>
-<b>Undo/Redo:</b> Fix mistakes easily.<br>
-<b>Image Uploads:</b> Enhance your ideas with visuals.<br>
-<b>Pen Customization:</b> Change color and width for expressive drawing.<br>
+<li><b>Real-time Drawing:</b>See others' strokes as they happen.</li>
+<li><b>Board Rooms:</b> Unique IDs let you create private collaboration spaces.</li>
+<li><b>Undo/Redo:</b> Fix mistakes easily.</li>
+<li><b>Image Uploads:</b> Enhance your ideas with visuals.</li>
+<li><b>Pen Customization:</b> Change color and width for expressive drawing.</li>
 </ul>
 
 ## Use Cases
 
 <ol>
-<li><<b>Brainstorming:</b> Capture ideas together, no matter the distance./li><br>
-<li><b>Creative</b> Collaboration: Sketch, draw, and design collectively.</li><br>
-<li><b>Remote Teaching/Learning:</b> Visual explanations made easy.</li><br>
+<li><b>Brainstorming:</b> Capture ideas together, no matter the distance./li>
+<li><b>Creative</b> Collaboration: Sketch, draw, and design collectively.</li>
+<li><b>Remote Teaching/Learning:</b> Visual explanations made easy.</li>
 </ol>
 
 ## Tech Stack
-<ol>
-<li><b>Frontend:</b> ReactJS, CSS</li><br>
-<li><b>Backend:</b> Node.js</li><br>
-<li><b>Collaboration:</b> Socket.IO</li><br>
-<li><b>Unique IDs:</b> UUID</li><br>
-<li><b>Pop-up Messages:</b> React Toaster</li><br>
-</ol>
+<ul>
+<li><b>Frontend:</b> ReactJS, CSS</li>
+<li><b>Backend:</b> Node.js</li>
+<li><b>Collaboration:</b> Socket.IO</li>
+<li><b>Unique IDs:</b> UUID</li>
+<li><b>Pop-up Messages:</b> React Toaster</li>
+</ul>
 
 ## How It Works
 <ul>
@@ -38,6 +38,7 @@
 </ul>
 
 ##Getting Started
-git clone https://your-repository-url.git
+```bash
+git clone https://github.com/sumraharshit/Real_Time_Collaborative_WhiteBoard.git
 
 
