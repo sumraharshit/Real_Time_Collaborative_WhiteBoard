@@ -3,30 +3,31 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 
 
-
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer);
-
 const userSocketMap = {};
-
+const boardUsersMap = {};
 
 
 function getAllConnectedClients(boardId) {
-  return Array.from(io.sockets.adapter.rooms.get(boardId) || []).map(
-    (socketId) => {
-      return {
-        socketId,
-        userName: userSocketMap[socketId],
-        imageUrl: userSocketMap[socketId]?.imageUrl, 
-      };
-    }
-  );
+  const usernames = boardUsersMap[boardId] || [];
+  return usernames.map(userName => ({
+    socketId: userSocketMap[userName], 
+    userName,
+  }));
 }
 
 io.on("connection", (socket) => {
   socket.on("join", ({ boardId, userName }) => {
-    userSocketMap[socket.id] = userName;
+    if (boardUsersMap[boardId]?.includes(userName)) {
+      return; 
+    }
+
+    userSocketMap[userName] = socket.id;
+    boardUsersMap[boardId] = boardUsersMap[boardId] || [];
+    boardUsersMap[boardId].push(userName);
+
     console.log('User joined:', userName, 'Socket ID:', socket.id);
     socket.join(boardId);
 
@@ -52,13 +53,20 @@ io.on("connection", (socket) => {
   socket.on('disconnecting', () => {
     const rooms = [...socket.rooms];
     rooms.forEach((boardId) => {
+     const userName = boardUsersMap[boardId]?.find(name => userSocketMap[name] === socket.id); 
+
+      
+
+      if(userName){
       socket.in(boardId).emit("disconnected", {
         socketId: socket.id,
-        userName: userSocketMap[socket.id],
+        userName,
       });
+      boardUsersMap[boardId] = boardUsersMap[boardId]?.filter(name => name !== userName);
+      delete userSocketMap[userName]; 
+    }
     });
 
-    delete userSocketMap[socket.id];
     socket.leave();
   });
 });
