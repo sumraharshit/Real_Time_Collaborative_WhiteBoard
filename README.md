@@ -1,6 +1,6 @@
 # Real-Time Collaborative Whiteboard
 
-🎨 Collaborate visually in real time with this intuitive whiteboard application!
+🎨 The Projetc let users collaborate visually for brainstorming and creative purposes in real time. 
 
 ## Features
 
@@ -29,6 +29,9 @@
 <li><b>Pop-up Messages:</b> React Toaster</li>
 </ul>
 
+## Screenshots
+
+
 ## How It Works
 <ul>
 <li>A user can create a new board unique Id or can joins a existing board room using a unique ID.</li>
@@ -37,8 +40,35 @@
 <li>All connected clients receive and render these drawing updates in real time.</li>
 </ul>
 
-##Getting Started
-```bash
-git clone https://github.com/sumraharshit/Real_Time_Collaborative_WhiteBoard.git
+## Getting Started
+
+### 1.Clone the Repository
+
+```git clone https://github.com/sumraharshit/Real_Time_Collaborative_WhiteBoard.git```
+
+### 2. Install the Dependencies
+
+```npm install```
+
+#### For server
+```cd server```
+```npm install```
+
+### 3. Start the Server
+``` cd server ```
+``` nodemon start ```
+
+### 4. Start the Frontend
+```cd src```
+```npm start```
+
+### 5. Open in Browser
+Navigate to http://localhost:3000
+
+## Contributing
+Contribution are always welcome. 
+
+
+
 
 
