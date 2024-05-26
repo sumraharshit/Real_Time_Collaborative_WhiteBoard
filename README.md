@@ -15,10 +15,27 @@
 ## Use Cases
 
 <ol>
-<b>Brainstorming:</b> Capture ideas together, no matter the distance.
-<b>Creative</b> Collaboration: Sketch, draw, and design collectively.
-<b>Remote Teaching/Learning:</b> Visual explanations made easy.
+<li><<b>Brainstorming:</b> Capture ideas together, no matter the distance./li><br>
+<li><b>Creative</b> Collaboration: Sketch, draw, and design collectively.</li><br>
+<li><b>Remote Teaching/Learning:</b> Visual explanations made easy.</li><br>
 </ol>
 
 ## Tech Stack
+<li><b>Frontend:</b> ReactJS, CSS</li>
+<li><b>Backend:</b> Node.js</li>
+<li><b>Collaboration:</b> Socket.IO</li>
+<li><b>Unique IDs:</b> UUID</li>
+<li><b>Pop-up Messages:</b> React Toaster</li>
+
+##How It Works
+<ul>
+<li>A user can create a new board unique Id or can joins a existing board room using a unique ID.</li>
+<li>Socket.IO establishes a persistent connection between clients and the server.</li>
+<li>Drawing, image uploads, and undo are broadcast as events via Socket.IO.</li>
+<li>All connected clients receive and render these drawing updates in real time.</li>
+</ul>
+
+##Getting Started
+git clone https://your-repository-url.git
+
 
