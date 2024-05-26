@@ -31,6 +31,11 @@
 
 ## Screenshots
 
+<img src="public/screenshots/Create_or_Join_Board.png" alt="Create or Join Board" width="1000" position="center"/><br>
+<img src="public/screenshots/Whiteboard.png" alt="Whiteboard" width="1000" position="center"/><br>
+<img src="public/screenshots/Collaboration.png" alt="Collaboration" width="1000" position="center"/>
+
+
 
 ## How It Works
 <ul>
