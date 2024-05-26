@@ -31,6 +31,10 @@
 
 ## Screenshots
 
+![Create or Join Board](public/screenshots/Create_or_Join_Board.png)
+![Whiteboard](public/screenshots/Whiteboard.png)
+![Collaboration](public/screenshots/Whiteboard.png)
+
 
 ## How It Works
 <ul>
